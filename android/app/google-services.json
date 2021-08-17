@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "537766980039",
+    "project_id": "rental-ca2bf",
+    "storage_bucket": "rental-ca2bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537766980039:android:30d5e5a3db92a5e0b8d1e2",
+        "android_client_info": {
+          "package_name": "com.example.musical_equipment_rental"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537766980039-sh84jjaqt9e0sdphq4lc2e5c1m4v3kps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY8E1c9TJebZW7o9ozLrhNV_qUsvCJjyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537766980039-sh84jjaqt9e0sdphq4lc2e5c1m4v3kps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

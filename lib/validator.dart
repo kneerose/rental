@@ -1,0 +1,15 @@
+ const String knullemail = "Enter your email address";
+ const String kalreadyaccount = "Account already exist";
+ const String kAccountCreated = "Account Created";
+ const String knotvalidemail = "Enter valid email address";
+ const String knullpass = "Enter your password";
+ const String knotmatchpassword = "Password not matched";
+ const String knotvalidpassword = "must contain number,capital letter,symbol and of 8 digits ";
+ const String knullphone = "Enter your contact number";
+ const String knotValidPhone = "Enter a valid contact number";
+ const String knulllocation = "Enter your Location";
+ const String knullUsername = "Enter your username";
+ const String knull = "This field mustnot be empty";
+final RegExp emailValidatorRegExp = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+final RegExp passwordValidatorRegExp = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+final RegExp phoneValidatorRegExp = RegExp(r"^(?:[+0]9)?[0-9]{10}$");
