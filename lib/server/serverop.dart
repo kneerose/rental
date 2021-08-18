@@ -217,6 +217,7 @@ class Serverop{
     print("i am inside");
     var res = await http.post(url,body:{
       "id":addlist.id.toString(),
+      "imagepath":addlist.filepath,
     });
     print(res.statusCode);
     if(res.statusCode==200)
@@ -256,19 +257,19 @@ class Serverop{
     
     }
   }
-  // Future deleteimage(String imageid)async
-  // {
-  //   print("i am in");
-  //   final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/image/c3952c44-2ac4-44e5-b7d3-4fe9c2ec3d4d1330449491.jpg");
-  //   final  response = await http.delete(uri,
-  //   headers: {
-  //     'Accept': 'application/json',
-  //     'Content-Type': 'multipart/form-data',
-  //     'contentType': 'application/x-tar',
-  //   },
-  //   );
-  //   print(response);
-  //   return response;
-  // }
+  Future deleteimage(String imageid)async
+  {
+    print("i am in");
+    final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/image/c3952c44-2ac4-44e5-b7d3-4fe9c2ec3d4d1330449491.jpg");
+    final  response = await http.delete(uri,
+    headers: {
+      'Accept': 'application/json',
+      'ContentType': 'application/json; charset=UTF-8',
+    },
+    );
+    
+    print(response.statusCode);
+  //  return response;
+  }
   
 }

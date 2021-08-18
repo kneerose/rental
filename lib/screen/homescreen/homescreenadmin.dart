@@ -659,7 +659,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           ElevatedButton(
                               onPressed: () {
-                               //   Serverop().deleteimage(addlist.filepath);
+                                // Serverop().deleteimage(addlist.filepath);
                                Serverop().delete(addlist, context).then((value) => {
                             setState((){
                                  equipmentlist.remove(addlist);
