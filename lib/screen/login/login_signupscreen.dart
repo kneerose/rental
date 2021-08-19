@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +7,7 @@ import 'package:musical_equipment_rental/screen/login/signup.dart';
 import 'package:musical_equipment_rental/server/serverop.dart';
 import 'package:musical_equipment_rental/validator.dart';
 import '../../theme.dart';
+import 'package:convert/convert.dart';
 class LogSign extends StatefulWidget {
   const LogSign({ Key? key }) : super(key: key);
 
@@ -169,11 +171,12 @@ class _LogSignState extends State<LogSign> {
                              if(status == DataConnectionStatus.connected)
                             { if(_formKey.currentState!.validate())
                              {
+                               print(hex.encode(utf8.encode(password.text)).toString());
                                setState(() {
                                   isloading=true;
                                });
                               
-                               Serverop().login(email.text.trim(),password.text,context).then((value) {
+                               Serverop().login(email.text.trim(),hex.encode(utf8.encode(password.text)).toString(),context).then((value) {
                                     isloading=false;
                                     
                                } );
