@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:convert/convert.dart';
 import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:musical_equipment_rental/server/serverop.dart';
@@ -209,7 +212,7 @@ class _SignupState extends State<Signup> {
                     heightspace(20),
                     ElevatedButton(
                    onPressed: ()async{
-                     DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
+                    // DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
                    //  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                          if(_key.currentState!.validate())
                          {
@@ -220,30 +223,28 @@ class _SignupState extends State<Signup> {
                            //   sharedPreferences.setString("username", _username.text);
                            // });
 
-                           if(status==DataConnectionStatus.connected)
-                           {
+                         //  if(status==DataConnectionStatus.connected)
+                          // {
                              setState(() {
                                 isloading=true;
                              });
-                             String? gettoken;
-                            await FirebaseMessaging.instance.getToken().then((value) => 
-                            {
-                               gettoken = value,
-                               Serverop().signup(_password.text,_email.text,_username.text,_location.text,_contactnumber.text,gettoken!, context,).then((value) {
+        
+                             print(hex.encode(utf8.encode(_password.text)).toString());
+                                Serverop().signup(hex.encode(utf8.encode(_password.text)).toString(),_email.text,_username.text,_location.text,_contactnumber.text, context,).then((value) {
                                setState(() {
                                  isloading=false;
                                });
-                             }),
-                            });
+                             });
+                          
                             
                            }
-                           else
-                           {
-                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("No internet connection !!"))
-                             );
-                           }
-                         }
+                          //  else
+                          //  {
+                          //    ScaffoldMessenger.of(context).showSnackBar(
+                          //     SnackBar(content: Text("No internet connection !!"))
+                          //    );
+                          //  }
+                        // }
                    }, 
                    child: Text("Sign up"),
                    style: ElevatedButton.styleFrom(

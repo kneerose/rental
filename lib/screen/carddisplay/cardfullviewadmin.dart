@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:musical_equipment_rental/model/addlist.dart';
+import 'package:musical_equipment_rental/model/equipmentcategory.dart';
 import 'package:musical_equipment_rental/theme.dart';
 import 'package:get/get.dart';
 class CardFullViewAdmin extends StatefulWidget {
-  final String title;
-  final String imagepath;
-  final String description;
-  final String location;
-  final String price;
-  final String quantity;
-  const CardFullViewAdmin({ Key? key,required this.title,required this.imagepath,required this.description,required this.location,required this.price ,required this.quantity}) : super(key: key);
+  // final String brand;
+  // final String imagepath;
+  // final String description;
+  // final String location;
+  // final int price;
+  // final String quantity;
+  final Equipmentcategory equipmentcategory;
+  final Addlist addlist;
+  const CardFullViewAdmin({ Key? key,required this.equipmentcategory,required this.addlist}) : super(key: key);
 
   @override
-  _CardFullViewAdminState createState() => _CardFullViewAdminState();
+  _CardFullViewAdminState createState() => _CardFullViewAdminState(equipmentcategory,addlist);
 }
 
 class _CardFullViewAdminState extends State<CardFullViewAdmin> {
+  Equipmentcategory equipmentcategory;
+  Addlist addlist;
+  _CardFullViewAdminState(this.equipmentcategory,this.addlist);
+    String urlimagepath = "https://musicalequipmentrental.000webhostapp.com/image/";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title:Text(widget.title) ,
+        title:Text(equipmentcategory.equipment) ,
         centerTitle: true,
         elevation: 0,
         backgroundColor: kprimaryColor,
@@ -30,6 +38,7 @@ class _CardFullViewAdminState extends State<CardFullViewAdmin> {
         }, icon: Icon(Icons.arrow_back_ios_new)),
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
             heightspace(20),
@@ -37,7 +46,10 @@ class _CardFullViewAdminState extends State<CardFullViewAdmin> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 height: 300,
-                child: Image.network(widget.imagepath,fit: BoxFit.fill,)),
+                child:FadeInImage(
+          fadeInDuration: Duration(milliseconds: 100),
+          placeholder: AssetImage("assets/no.png"), image:NetworkImage(urlimagepath+addlist.filepath) ,fit: BoxFit.contain,)
+        ,),
             ),
               heightspace(10),
                Padding(
@@ -51,29 +63,29 @@ class _CardFullViewAdminState extends State<CardFullViewAdmin> {
                       widthspace(5),
                       Container(
                         width: MediaQuery.of(context).size.width/2,
-                        child: Text(widget.location.capitalizeFirst!,style: TextStyle(fontSize: 13),)),
+                        child: Text(addlist.location.capitalizeFirst!,style: TextStyle(fontSize: 13),)),
                     ],
                   ),
                   Container(
-                    child: Text("Rs ${widget.price}/day",style: TextStyle(fontSize: 13)))
+                    child: Text("Rs ${equipmentcategory.priceperday}/day",style: TextStyle(fontSize: 13)))
               ],
               
             ),
                ),
               Container(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(widget.description,textAlign: TextAlign.center,style: TextStyle(fontSize: 15,letterSpacing: 0.5),),
+                child: Text(addlist.description,textAlign: TextAlign.center,style: TextStyle(fontSize: 15,letterSpacing: 0.5),),
               ),
               heightspace(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text("Contact number : 9861287112",style: TextStyle(fontSize: 13)),
+                  Text("Contact number : ${addlist.contactnumber}",style: TextStyle(fontSize: 13)),
                   widthspace(10),
                 ],
               ),
               heightspace(10),
-            Text("Available Quantity :   ${widget.quantity}",textAlign: TextAlign.center,style: TextStyle(fontSize: 15),),
+            Text("Available Quantity :   ${addlist.quantity}",textAlign: TextAlign.center,style: TextStyle(fontSize: 15),),
           
               heightspace(10),
                

@@ -31,6 +31,7 @@ class _ProfileState extends State<Profile> {
     username = sharedPreferences.getString("username");
     phonenumber= sharedPreferences.getString("contactnumber");
     status = sharedPreferences.getString("status");
+    firmname = sharedPreferences.getString("firmname");
     //token = sharedPreferences.getString("token");
     });
   
@@ -106,13 +107,20 @@ class _ProfileState extends State<Profile> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        status=="user"?
                         Text(
                           "Name",
                           style: TextStyle(fontSize: 15),
+                        ): Text(
+                          "Firm Name",
+                          style: TextStyle(fontSize: 15),
                         ),
                         SizedBox(height: 5),
-                        Text(
+                       status=="user"? Text(
                           "${username!.capitalizeFirst}",
+                          style: TextStyle(fontSize: 18,color: Colors.grey),
+                        ):Text(
+                          "${firmname!.capitalizeFirst}",
                           style: TextStyle(fontSize: 18,color: Colors.grey),
                         ),
                       ],
@@ -238,6 +246,8 @@ class _ProfileState extends State<Profile> {
               preferences.remove("location");
               preferences.remove("contactnumber");
               preferences.remove("status");
+              preferences.remove("id");
+              preferences.remove("frimname");
               //preferences.remove("token");
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LogSign()), (route) => false);
                 },

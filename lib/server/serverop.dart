@@ -7,6 +7,7 @@ import 'package:musical_equipment_rental/main.dart';
 import 'package:musical_equipment_rental/model/addlist.dart';
 import 'package:musical_equipment_rental/screen/homescreen/homescreenadmin.dart';
 import 'package:musical_equipment_rental/screen/homescreen/homescreenuser.dart';
+import 'package:musical_equipment_rental/screen/login/login_signupscreen.dart';
 import 'package:musical_equipment_rental/validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Serverop{
@@ -54,18 +55,20 @@ class Serverop{
             }
             else
             {
-            Fluttertoast.showToast(msg: "Loged in ",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
+            Fluttertoast.showToast(msg: "Loged in",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
             SharedPreferences sharedPreferences = await SharedPreferences.getInstance().then((value){ 
-              data[5]=="admin"? Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()),(r)=>false): Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreenuser()),(r)=>false);
+             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()),(r)=>false);
               return value;
             }
             );
             sharedPreferences.setString("id",data[0]);
-             sharedPreferences.setString("username", data[1]);
-            sharedPreferences.setString("contactnumber", data[2]);
-            sharedPreferences.setString("location", data[3]);
+             sharedPreferences.setString("username", data[5]);
+            sharedPreferences.setString("contactnumber", data[3]);
+            sharedPreferences.setString("location", data[2]);
             sharedPreferences.setString("email", data[4]);
-            sharedPreferences.setString("status", data[5]);
+            sharedPreferences.setString("status", data[6]);
+            sharedPreferences.setString("firmname",data[1]);
+            return data;
             }
           }
           else if(data1.runtimeType!=String)
@@ -89,6 +92,7 @@ class Serverop{
             sharedPreferences.setString("location", data1[4]);
             sharedPreferences.setString("status", "user");
             }
+            return data1;
           }
         }
       }
@@ -101,16 +105,17 @@ class Serverop{
     }catch(e)
     {
       print(e);
+      
       print("not");
     }
   }
-  Future signup(String passWord,String emAil,String userName,String loCation,String phoneNumber,String tokengenerate ,BuildContext context)async
+  Future signup(String passWord,String emAil,String userName,String loCation,String phoneNumber ,BuildContext context)async
   {
      try{
        final uri =Uri.parse("http://musicalequipmentrental.000webhostapp.com/signup.php");
        var body = {
          "username":userName,
-         "contactnumber":phoneNumber,
+         "contact":phoneNumber,
          "location":loCation,
          "email":emAil,
          "password":passWord,
@@ -128,17 +133,17 @@ class Serverop{
          {
           
            Fluttertoast.showToast(msg: kAccountCreated,toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreenuser()),(r)=>false);
-           SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-            sharedPreferences.setString("email", emAil);
-            sharedPreferences.setString("contactnumber", phoneNumber);
-            sharedPreferences.setString("location", loCation);
-            sharedPreferences.setString("username",userName);
-            sharedPreferences.setString("status", "user");
-            sharedPreferences.setString("token",tokengenerate);
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LogSign()),(r)=>false);
+          //  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+          //   sharedPreferences.setString("email", emAil);
+          //   sharedPreferences.setString("contactnumber", phoneNumber);
+          //   sharedPreferences.setString("location", loCation);
+          //   sharedPreferences.setString("username",userName);
+          //   sharedPreferences.setString("status", "user");
          }
          else
           {
+            passWord.hashCode;
             Fluttertoast.showToast(msg: "Failed",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
           }
 
@@ -152,26 +157,28 @@ class Serverop{
       print(e);
     }
   }
-  Future forgotpassword()async
-  {
-     try{
+  // Future forgotpassword()async
+  // {
+  //    try{
 
-    }catch(e)
-    {
-      print(e);
-    }
-  }
-  Future addequipmentsserver(String title,String type,String description,String quantity,String imagepath,String location,String price) async
+  //   }catch(e)
+  //   {
+  //     print(e);
+  //   }
+  // }
+  Future addequipmentsserver(String brand,String ownerid,String categoryid,String description,String quantity,String imagepath,String location,String contactnumber) async
   {
     try{
+      print("Category_id is $categoryid");
       final uri = Uri.parse("http://musicalequipmentrental.000webhostapp.com/setdata.php");
       var request = http.MultipartRequest('POST',uri);
-      request.fields["title"]=title;
-      request.fields["type"]=type;
+      request.fields["brand"]=brand;
+      request.fields["owner_id"]=ownerid;
+      request.fields["category_id"]=categoryid;
       request.fields["description"]=description;
       request.fields["quantity"]=quantity;
+      request.fields["contactnumber"]=contactnumber;
       request.fields["location"]=location;
-      request.fields["price_per_day"]=price;
       var picture = await http.MultipartFile.fromPath("image",imagepath);
       request.files.add(picture);
       var response = await request.send();
@@ -187,6 +194,25 @@ class Serverop{
       
     }
     catch(e){
+      print(e);
+    }
+  }
+  Future getproductserver()async
+  {
+      try{
+    final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/getproducts.php");
+    var response = await http.get(uri);
+    if(response.statusCode==200)
+   { print(response.body);
+  return jsonDecode(response.body);
+   }
+   else
+   {
+     print(response.statusCode);
+   }
+    }
+    catch(e)
+    {
       print(e);
     }
   }
@@ -236,40 +262,86 @@ class Serverop{
     return "error";
   }
   }
-  Future edit(String title,String type,String description,String quantity,String price,String id)async
+  Future edit(String brand,String description,String quantity,int categoryid,String id)async
   {
-    print(location);
+    print("category $categoryid");
     final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/edit.php");
     var body = {
        "id":id,
-      "title":title ,
-        "type": type,
+      "brand":brand ,
         "description": description,
         "quantity": quantity,
-        "price_per_day":price
+        "categoryid":categoryid.toString(),
     };
     var response = await http.post(uri,body:body);
     print(response.statusCode);
     if(response.statusCode==200)
     {
+      print(response.body);
        Fluttertoast.showToast(msg: "Updated",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
       return response.body;
     
     }
-  }
-  Future deleteimage(String imageid)async
-  {
-    print("i am in");
-    final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/image/c3952c44-2ac4-44e5-b7d3-4fe9c2ec3d4d1330449491.jpg");
-    final  response = await http.delete(uri,
-    headers: {
-      'Accept': 'application/json',
-      'ContentType': 'application/json; charset=UTF-8',
-    },
-    );
     
-    print(response.statusCode);
-  //  return response;
   }
-  
-}
+  Future getequipmentcategory()async{
+    try{
+      print("i am innnn");
+    final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/getequipmentcategory.php");
+    final response = await http.get(uri);
+    if(response.statusCode==200)
+    {
+      var data = json.decode(response.body);
+      print(data);
+      return data;
+    }
+    else
+    {
+      Fluttertoast.showToast(msg: "failed ",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
+    }
+  } catch(e)
+  {
+    print(e);
+  }
+  }
+  Future getnotification()async
+  {
+    try{
+      final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/getbookings.php");
+      final response = await http.get(uri);
+      if(response.statusCode==200)
+      {
+        var data = jsonDecode(response.body);
+        return data;
+      }
+    }
+    catch(e)
+    {
+      print(e);
+    }
+  }
+  Future hire(String customerid,int ownerid,int productid,int noofdays,String dateofrental,String dateofreturn,int totalprice)async
+  {
+    try{
+      final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/booking.php");
+      var body = {
+        "customer_id":customerid,
+        "owner_id":ownerid.toString(),
+        "product_id":productid.toString(),
+        "no_of_days":noofdays.toString(),
+        "date_of_rental":dateofrental,
+        "date_of_return":dateofreturn,
+        "total_price":totalprice.toString(),
+      };
+      final response = await http.post(uri,body:body );
+      if(response.statusCode==200)
+      {
+        Fluttertoast.showToast(msg: "submitted succesfully",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
+      }
+    }
+    catch(e)
+    {
+      print(e);
+    }
+  }
+  }
