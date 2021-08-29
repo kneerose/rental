@@ -212,7 +212,7 @@ class _SignupState extends State<Signup> {
                     heightspace(20),
                     ElevatedButton(
                    onPressed: ()async{
-                     DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
+                    // DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
                    //  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                          if(_key.currentState!.validate())
                          {
@@ -223,8 +223,8 @@ class _SignupState extends State<Signup> {
                            //   sharedPreferences.setString("username", _username.text);
                            // });
 
-                           if(status==DataConnectionStatus.connected)
-                           {
+                         //  if(status==DataConnectionStatus.connected)
+                          // {
                              setState(() {
                                 isloading=true;
                              });
@@ -238,13 +238,13 @@ class _SignupState extends State<Signup> {
                           
                             
                            }
-                           else
-                           {
-                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("No internet connection !!"))
-                             );
-                           }
-                         }
+                          //  else
+                          //  {
+                          //    ScaffoldMessenger.of(context).showSnackBar(
+                          //     SnackBar(content: Text("No internet connection !!"))
+                          //    );
+                          //  }
+                        // }
                    }, 
                    child: Text("Sign up"),
                    style: ElevatedButton.styleFrom(

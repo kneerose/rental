@@ -1,9 +1,6 @@
-import 'package:data_connection_checker_tv/data_connection_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:musical_equipment_rental/main.dart';
-import 'package:musical_equipment_rental/model/addlist.dart';
-import 'package:musical_equipment_rental/model/equipmentcategory.dart';
+import 'package:musical_equipment_rental/model/getproductsmodel.dart';
 import 'package:musical_equipment_rental/screen/carddisplay/cardfullviewuser.dart';
 import 'package:musical_equipment_rental/screen/notification/notification.dart';
 import 'package:musical_equipment_rental/screen/profile/profile.dart';
@@ -15,7 +12,7 @@ import 'package:get/get.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 class HomeScreenuser extends StatefulWidget {
-  const HomeScreenuser({ Key? key }) : super(key: key);
+  const HomeScreenuser({ Key? key}) : super(key: key);
 
   @override
   _HomeScreenuserState createState() => _HomeScreenuserState();
@@ -26,11 +23,13 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
   String? location;
   String? username;
   String? contactnumber;
+  String? password;
   RefreshController _refreshController =RefreshController(initialRefresh: false);
-  List<Addlist> equipmentlist = [];
+ // List<Addlist> equipmentlist = [];
   List equipmentid =[];
-   List<Equipmentcategory> equipmentcategory = [];
-    List equipmentcategoryid=[];
+  // List<Equipmentcategory> equipmentcategory = [];
+  //  List equipmentcategoryid=[];
+    List<Getproducts> getproducts = [];
   TextEditingController _equipment = TextEditingController();
   String urlimagepath = "https://musicalequipmentrental.000webhostapp.com/image/";
   
@@ -40,7 +39,7 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
     
     super.initState();
      getshare();
-     fetchequipmentcategory();
+    // fetchequipmentcategory();
      fetch();
    
   }
@@ -56,103 +55,106 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
     });
   
   }
-   Future fetchequipmentcategory()async 
-  { DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
-  if(status==DataConnectionStatus.connected)
-    {
-    List value = await Serverop().getequipmentcategory();
-    print(value);
-    if(value.isNotEmpty)
-    {
+
+  //  Future fetchequipmentcategory()async 
+  // { DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
+  // if(status==DataConnectionStatus.connected)
+  //   {
+  //   List value = await Serverop().getequipmentcategory();
+  //   print(value);
+  //   if(value.isNotEmpty)
+  //   {
      
-      for(int i=0;i<value.length;i++)
-      {
-        if(equipmentcategoryid.isEmpty)
-        {
-          setState(() {
-            equipmentcategory.add(Equipmentcategory.tojson(value[i]));
-          });
+  //     for(int i=0;i<value.length;i++)
+  //     {
+  //       if(equipmentcategoryid.isEmpty)
+  //       {
+  //         setState(() {
+  //           equipmentcategory.add(Equipmentcategory.tojson(value[i]));
+  //         });
         
-        }
-        else
-        {
-          if(!equipmentcategoryid.contains(int.parse(value[i]["id"])))
-          {
-             setState(() {
-            equipmentcategory.add(Equipmentcategory.tojson(value[i]));
-          });
-          }
-        }
-      }
-    }
-    else 
-    {
-      Fluttertoast.showToast(msg: "Error in fetching category",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
-    }
-     }
-  else
-  {
-  ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds: 2),
-            content: Text("No internet connection!"))
-              );
-  }
-  }
+  //       }
+  //       else
+  //       {
+  //         if(!equipmentcategoryid.contains(int.parse(value[i]["id"])))
+  //         {
+  //            setState(() {
+  //           equipmentcategory.add(Equipmentcategory.tojson(value[i]));
+  //         });
+  //         }
+  //       }
+  //     }
+  //   }
+  //   else 
+  //   {
+  //     Fluttertoast.showToast(msg: "Error in fetching category",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
+  //   }
+  //    }
+  // else
+  // {
+  // ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           duration: Duration(seconds: 2),
+  //           content: Text("No internet connection!"))
+  //             );
+  // }
+  // }
   Future fetch()async{
-     DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
-    if(status==DataConnectionStatus.connected)
-    {print("i am in");
-   List value = await Serverop().getequipmentsserver();
+    // DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
+   // if(status==DataConnectionStatus.connected)
+  //  {
+      print("i am in");
+   List value = await Serverop().getproductserver();
   if(value.isNotEmpty)
   {
     for(int i=0;i<value.length;i++)
     {
-      if(equipmentid.isEmpty)
+      if(value[i]["id"]!=null)
+     { if(equipmentid.isEmpty)
       {
       setState(() {
-         equipmentlist.add(Addlist.tojson(value[i]));
+         getproducts.add(Getproducts.tojson(value[i]));
       });
       }
       else
           {
             if(!equipmentid.contains(int.parse(value[i]["id"]))) 
           { setState(() {
-              equipmentlist.add(Addlist.tojson(value[i]));
+              getproducts.add(Getproducts.tojson(value[i]));
             });
           }
           
     }
 
-   
+     }
     }
   }
-    }
-    else
-    {
-       ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                duration: Duration(seconds: 2),
-                content: Text("No internet connection!"))
-                  );
-    }
+    // }
+    // else
+    // {
+    //    ScaffoldMessenger.of(context).showSnackBar(
+    //           SnackBar(
+    //             duration: Duration(seconds: 2),
+    //             content: Text("No internet connection!"))
+    //               );
+    // }
   }
    void _refresh({String purpose = 'refresh'}) 
   {
     setState(() {
-       equipmentid = equipmentlist.map((e) => e.id).toList();
-        equipmentcategoryid = equipmentcategory.map((e) => e.id).toList();
+       equipmentid = getproducts.map((e) => e.id).toList();
+       // equipmentcategoryid = equipmentcategory.map((e) => e.id).toList();
     });
    
     print(equipmentid);
     fetch();
-    fetchequipmentcategory();
+    //fetchequipmentcategory();
     print(location!.capitalizeFirst!.trim());
-    for(int i=0;i<equipmentlist.length;i++)
-    { 
-      print(equipmentlist[i].location.trim());
+    // for(int i=0;i<equipmentlist.length;i++)
+    // { 
+    //   print(equipmentlist[i].location.trim());
 
-    }
+    // }
    
     if (purpose == 'refresh') {
       _refreshController.refreshCompleted();
@@ -191,11 +193,13 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
       body:SmartRefresher(
         controller: _refreshController,
         onRefresh: _refresh,
-        child:(equipmentlist.length!=0 && equipmentcategory.length!=0)?  Column(
+        child:getproducts.length!=0?
+        //(equipmentlist.length!=0 && equipmentcategory.length!=0)? 
+         Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
-              child: TypeAheadFormField<Equipmentcategory>(
+              child: TypeAheadFormField<Getproducts>(
                 
                   // key: _statekey,
                   transitionBuilder: (context, suggestionsBox, controller) {
@@ -218,7 +222,7 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
                   ),
                   suggestionsCallback: (pattern) {
                     return 
-                    equipmentcategory
+                    getproducts
                         .where((e) => e.equipment
                             .toLowerCase()
                             .contains(pattern.toLowerCase()))
@@ -252,21 +256,27 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
               
               child: ListView.builder(
                 
-                itemCount: equipmentlist.length,
+                itemCount: getproducts.length,
                 itemBuilder: (context,index){
-                 if(equipmentcategory.elementAt(equipmentlist[equipmentlist.length-index-1].categoryid-1).equipment.toLowerCase().contains(_equipment.text.toLowerCase()))
+                // if(equipmentcategory.elementAt(equipmentlist[equipmentlist.length-index-1].categoryid-1).equipment.toLowerCase().contains(_equipment.text.toLowerCase()))
+                if(getproducts[getproducts.length-index-1].equipment.toLowerCase().contains(_equipment.text.toLowerCase()))
                 {       
                 return InkWell(
                   onTap: ()
                   {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>CardFullViewUser(equipmentcategory: equipmentcategory.elementAt(equipmentlist[equipmentlist.length-index-1].categoryid-1),addlist: equipmentlist[equipmentlist.length-index-1],)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>CardFullViewUser(getproducts:getproducts[getproducts.length-index-1]
+                    // equipmentcategory: equipmentcategory.elementAt(equipmentlist[equipmentlist.length-index-1].categoryid-1),addlist: equipmentlist[equipmentlist.length-index-1],
+                      )));
                   },
                   child: 
                   
                   Container(
                      height: 150,
                     margin: const EdgeInsets.only(left:10,right: 10,bottom: 5,top: 5),
-                    child: equipmentlistcard(equipmentcategory: equipmentcategory.elementAt(equipmentlist[equipmentlist.length-index-1].categoryid-1),addlist: equipmentlist[equipmentlist.length-index-1],),)
+                    child: equipmentlistcard(
+                      getproducts:getproducts[getproducts.length-index-1]
+                     // equipmentcategory: equipmentcategory.elementAt(equipmentlist[equipmentlist.length-index-1].categoryid-1),addlist: equipmentlist[equipmentlist.length-index-1],
+                      ),)
                 );
                 }
                 else
@@ -281,7 +291,7 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
       )
     );
   }
-   Card equipmentlistcard({required Addlist addlist,required Equipmentcategory equipmentcategory})
+   Card equipmentlistcard({required Getproducts getproducts})
   {
     return Card(
       elevation: 5,
@@ -302,7 +312,7 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
         ),
         child:FadeInImage(
           fadeInDuration: Duration(milliseconds: 100),
-          placeholder: AssetImage("assets/no.png"), image:NetworkImage(urlimagepath+addlist.filepath) ,fit: BoxFit.cover,)
+          placeholder: AssetImage("assets/no.png"), image:NetworkImage(urlimagepath+getproducts.image) ,fit: BoxFit.cover,)
         ,),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -311,14 +321,14 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
             heightspace(10),
-            Text(equipmentcategory.equipment.capitalizeFirst!,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+            Text(getproducts.equipment.capitalizeFirst!,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
             heightspace(10),
            Flexible(
              child: Container(
                alignment: Alignment.center,
                width: (MediaQuery.of(context).size.width/2)-8,
                child: Text(
-                 addlist.description,style: TextStyle(fontSize: 12),maxLines: 4,),
+                 getproducts.description,style: TextStyle(fontSize: 12),maxLines: 4,),
              ),
            ),
             heightspace(10),
@@ -331,13 +341,13 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
                     widthspace(5),
                     Container(
                       width: MediaQuery.of(context).size.width/5,
-                      child: Text(addlist.location.capitalizeFirst!,style: TextStyle(fontSize: 8),)),
+                      child: Text(getproducts.location.capitalizeFirst!,style: TextStyle(fontSize: 8),)),
                   ],
                 ),
                 widthspace(10),
                 Container(
                   width:MediaQuery.of(context).size.width/6 ,
-                  child: Text("Rs ${equipmentcategory.priceperday}/day",style: TextStyle(fontSize: 10)))
+                  child: Text("Rs ${getproducts.priceperday}/day",style: TextStyle(fontSize: 10)))
               ],
               
             ),
@@ -348,6 +358,7 @@ class _HomeScreenuserState extends State<HomeScreenuser> {
       ],),
     );
   }
+  
    @override
   void dispose() {
     // TODO: implement dispose

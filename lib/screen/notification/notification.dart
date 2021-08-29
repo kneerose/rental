@@ -18,6 +18,7 @@ class _NotificationuserState extends State<Notificationuser> {
    RefreshController _refreshController =RefreshController(initialRefresh: false);
    List<Booking> booking = [];
    List<int> notificationid =[];
+   bool isfirst = true;
     @override
   void initState() {
     // TODO: implement initState
@@ -37,6 +38,7 @@ class _NotificationuserState extends State<Notificationuser> {
        if(id==value[i]["customer_id"])
        {setState(() {
           booking.add(Booking.tojson(value[i]));
+          isfirst=false;
        });
        }
        
@@ -45,16 +47,18 @@ class _NotificationuserState extends State<Notificationuser> {
      {
        if(!notificationid.contains(int.parse(value[i]["id"])))
        {
-         if(id==value[i]["customer_id"])
+         if(email==value[i]["customer_id"])
        {
          setState(() {
            booking.add(Booking.tojson(value[i]));
+           isfirst=false;
          });
        }
          
        }
      }
       }
+     
 
     }
     else
@@ -93,7 +97,7 @@ class _NotificationuserState extends State<Notificationuser> {
       ),
       body: SmartRefresher(controller:_refreshController,
       onRefresh: _refresh,
-      child: booking.length!=0?ListView.builder(
+      child:isfirst?SizedBox(): booking.length!=0?ListView.builder(
         itemCount: booking.length,
         itemBuilder: (context,item)=>Container(
           //height: 100,
@@ -110,7 +114,7 @@ class _NotificationuserState extends State<Notificationuser> {
       elevation: 2,
       child:Padding(
         padding: const EdgeInsets.all(10),
-        child: Text("you want to hire  equipment guitar for ${booking.noofdays} days from ${booking.dateofrental} to ${booking.dateofreturn}",style: TextStyle(
+        child: Text("you  hired  ${booking.type} ${booking.equipment} for ${booking.noofdays} days from ${booking.dateofrental} to ${booking.dateofreturn} \nowner will contact you soon please be patience!!",style: TextStyle(
           height: 1.5,
           letterSpacing: 1
         ),),

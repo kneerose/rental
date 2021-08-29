@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:musical_equipment_rental/model/addlist.dart';
 import 'package:musical_equipment_rental/model/equipmentcategory.dart';
+import 'package:musical_equipment_rental/model/getproductsmodel.dart';
 import 'package:musical_equipment_rental/server/serverop.dart';
 import 'package:musical_equipment_rental/theme.dart';
 import 'package:get/get.dart';
@@ -15,25 +16,26 @@ class CardFullViewUser extends StatefulWidget {
   // final String description;
   // final String location;
   // final String price;
-   final Equipmentcategory equipmentcategory;
-  final Addlist addlist;
-  const CardFullViewUser({ Key? key,required this.equipmentcategory,required this.addlist}) : super(key: key);
+  // final Equipmentcategory equipmentcategory;
+  //final Addlist addlist;
+  final Getproducts getproducts;
+  const CardFullViewUser({ Key? key,required this.getproducts}) : super(key: key);
 
   @override
-  _CardFullViewUserState createState() => _CardFullViewUserState(equipmentcategory,addlist);
+  _CardFullViewUserState createState() => _CardFullViewUserState(getproducts);
 }
 
 class _CardFullViewUserState extends State<CardFullViewUser> {
   int quantity =1;
-  Equipmentcategory equipmentcategory;
+ // Equipmentcategory equipmentcategory;
   DateTime initialdate = DateTime.now();
-  
-  Addlist addlist;
-  _CardFullViewUserState(this.equipmentcategory,this.addlist);
+  Getproducts getproducts;
+ // Addlist addlist;
+  _CardFullViewUserState(this.getproducts);
    String urlimagepath = "https://musicalequipmentrental.000webhostapp.com/image/";
    late String dateofrental= DateFormat("yyyy-MM-dd").format(initialdate);
    late String dateofreturn= DateFormat("yyyy-MM-dd").format(initialdate.add(Duration(days: 1)));
-   late int price = equipmentcategory.priceperday;
+   late int price = getproducts.priceperday;
    bool isloading = false;
   int days = 1;
   @override
@@ -53,7 +55,7 @@ class _CardFullViewUserState extends State<CardFullViewUser> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title:Text(equipmentcategory.equipment) ,
+        title:Text(getproducts.equipment) ,
         centerTitle: true,
         elevation: 0,
         backgroundColor: kprimaryColor,
@@ -70,9 +72,18 @@ class _CardFullViewUserState extends State<CardFullViewUser> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 height: 300,
-                child: Image.network(urlimagepath+addlist.filepath,fit: BoxFit.fill,)),
+                child: FadeInImage(
+          fadeInDuration: Duration(milliseconds: 100),
+          placeholder: AssetImage("assets/no.png"), image:NetworkImage(urlimagepath+getproducts.image) ,fit: BoxFit.contain,)
+        ,),
+              //  Image.network(urlimagepath+getproducts.image,fit: BoxFit.fill,)),
             ),
               heightspace(10),
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                child:Text("${getproducts.firmname}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),), ),
+              
                Padding(
                  padding: const EdgeInsets.all(8.0),
                  child: Row(
@@ -84,30 +95,30 @@ class _CardFullViewUserState extends State<CardFullViewUser> {
                       widthspace(5),
                       Container(
                         width: MediaQuery.of(context).size.width/2,
-                        child: Text(addlist.location.capitalizeFirst!,style: TextStyle(fontSize: 13),)),
+                        child: Text(getproducts.location.capitalizeFirst!,style: TextStyle(fontSize: 13),)),
                     ],
                   ),
                   Container(
-                    child: Text("Rs ${equipmentcategory.priceperday}/day",style: TextStyle(fontSize: 13)))
+                    child: Text("Rs ${getproducts.priceperday}/day",style: TextStyle(fontSize: 13)))
               ],
               
             ),
                ),
               Container(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(addlist.description,textAlign: TextAlign.center,style: TextStyle(fontSize: 15,letterSpacing: 0.5),),
+                child: Text(getproducts.description,textAlign: TextAlign.center,style: TextStyle(fontSize: 15,letterSpacing: 0.5),),
               ),
               heightspace(10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text("Contact number : ${addlist.contactnumber}",style: TextStyle(fontSize: 13)),
+                  Text("Contact number : ${getproducts.phonenumber}",style: TextStyle(fontSize: 13)),
                   widthspace(10),
                 ],
               ),
               heightspace(10),
-              Text("Available quantity : ${addlist.quantity}",style: TextStyle(fontSize: 15),),
+              Text("Available quantity : ${getproducts.availablequantity}",style: TextStyle(fontSize: 15),),
               heightspace(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -131,7 +142,7 @@ class _CardFullViewUserState extends State<CardFullViewUser> {
                   ),
                   IconButton(onPressed: (){
                     setState(() {
-                      if(quantity<int.parse(addlist.quantity))
+                      if(quantity<getproducts.availablequantity)
                       {quantity++;}
                     });
                   }, icon: Icon(FontAwesomeIcons.plus,size: 15,))
@@ -187,7 +198,7 @@ class _CardFullViewUserState extends State<CardFullViewUser> {
                 setState(() {
                   isloading=true;
                 });
-                Serverop().hire(id!, addlist.ownerid,addlist.id, days, dateofrental, dateofreturn,(price*quantity*days)).then((value) {
+                Serverop().hire(id!, getproducts.ownerid,getproducts.id, days, dateofrental, dateofreturn,(price*quantity*days)).then((value) {
                   Navigator.pop(context);
                   setState(() {
                     isloading=false;

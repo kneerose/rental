@@ -9,6 +9,7 @@ String? location;
 String? username;
 String? status;
 String? firmname;
+String? password;
 //String? token;
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,7 @@ Future getshare()async
     phonenumber= sharedPreferences.getString("contactnumber");
     status = sharedPreferences.getString("status");
     firmname = sharedPreferences.getString("firmname");
+    password = sharedPreferences.getString("password");
   //  token = sharedPreferences.getString("token");
     });
   

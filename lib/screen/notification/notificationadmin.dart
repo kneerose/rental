@@ -5,6 +5,7 @@ import 'package:musical_equipment_rental/server/serverop.dart';
 import 'package:musical_equipment_rental/theme.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
 class Notificationadmin extends StatefulWidget {
@@ -17,6 +18,7 @@ class _NotificationadminState extends State<Notificationadmin> {
    RefreshController _refreshController =RefreshController(initialRefresh: false);
    List<Booking> booking = [];
    List<int> notificationid =[];
+   
    @override
   void initState() {
     // TODO: implement initState
@@ -40,6 +42,7 @@ class _NotificationadminState extends State<Notificationadmin> {
       {
         if(notificationid.isEmpty)
      {
+      
        if(id==value[i]["owner_id"])
        {setState(() {
           booking.add(Booking.tojson(value[i]));
@@ -98,7 +101,11 @@ class _NotificationadminState extends State<Notificationadmin> {
         itemBuilder: (context,item)=>Container(
           //height: 100,
           padding: EdgeInsets.only(left:10,right:10,top:5,bottom:5),
-          child: notificationdesign(booking[booking.length-item-1]),
+          child: InkWell(
+            onLongPress: (){
+              _makePhoneCall('tel:${booking[booking.length-item-1].contact}');
+            },
+            child: notificationdesign(booking[booking.length-item-1])),
         )):Center(child: CircularProgressIndicator(color: kprimaryColor,)),
       ),
       
@@ -110,11 +117,18 @@ class _NotificationadminState extends State<Notificationadmin> {
       elevation: 2,
       child:Padding(
         padding: const EdgeInsets.all(10),
-        child: Text("${booking.customerid} want to hire your  equipment guitar for ${booking.noofdays} days from ${booking.dateofrental} to ${booking.dateofreturn}",style: TextStyle(
+        child: Text("${booking.username} want to hire your ${booking.type} ${booking.equipment} for ${booking.noofdays} days from ${booking.dateofrental} to ${booking.dateofreturn} \nlongpress for phonecall",style: TextStyle(
           height: 1.5,
           letterSpacing: 1
         ),),
       ) ,
     );
+  }
+   Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

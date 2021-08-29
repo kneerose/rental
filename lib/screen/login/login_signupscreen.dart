@@ -167,9 +167,10 @@ class _LogSignState extends State<LogSign> {
                           //    child: Text("forgot password")):Container(),
                           heightspace(10),
                           ElevatedButton(onPressed: ()async{
-                             DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
-                             if(status == DataConnectionStatus.connected)
-                            { if(_formKey.currentState!.validate())
+                            // DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
+                            // if(status == DataConnectionStatus.connected)
+                            //{ 
+                              if(_formKey.currentState!.validate())
                              {
                                print(hex.encode(utf8.encode(password.text)).toString());
                                setState(() {
@@ -186,15 +187,15 @@ class _LogSignState extends State<LogSign> {
                               //  print("validated");
                                 
                              }
-                            }
-                            else
-                            {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      duration: Duration(seconds: 2),
-                                      content: Text("No internet connection!"))
-                                        );
-                                      }
+                          //  }
+                            // else
+                            // {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //         SnackBar(
+                            //           duration: Duration(seconds: 2),
+                            //           content: Text("No internet connection!"))
+                            //             );
+                            //           }
                                       }, child: Text("Login"),
                                                                style: ElevatedButton.styleFrom(
                                                                  primary: kprimaryColor,

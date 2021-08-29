@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getshare();
     fetchequipmentcategory();
+    getid();
     fetch();
 
   }
@@ -81,10 +82,17 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   
   }
+  Future getid()async
+  {
+    SharedPreferences sharedPreferences =await SharedPreferences.getInstance();
+    id = sharedPreferences.getString("id");
+    print(id);
+  }
   Future fetchequipmentcategory()async 
-  { DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
-  if(status==DataConnectionStatus.connected)
-    {
+  {
+    // DataConnectionStatus status = await DataConnectionChecker().connectionStatus;
+  //if(status==DataConnectionStatus.connected)
+   // {
     List value = await Serverop().getequipmentcategory();
     print(value);
     if(value.isNotEmpty)
@@ -126,15 +134,15 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       Fluttertoast.showToast(msg: "Error in fetching category",toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
     }
-     }
-  else
-  {
-  ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds: 2),
-            content: Text("No internet connection!"))
-              );
-  }
+   //  }
+  // else
+  // {
+  // ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           duration: Duration(seconds: 2),
+  //           content: Text("No internet connection!"))
+  //             );
+  // }
   }
 
   Future fetch()async{
@@ -397,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                        {
                          setstate((){
                             image=null;
-                            
+                            ispictureloading=false;
                          })
                        }
                        else
@@ -800,6 +808,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<XFile?> filepickfromcamera() async{
     return await ImagePicker().pickImage(source: ImageSource.camera);
   }
+  
    @override
   void dispose() {
     // TODO: implement dispose

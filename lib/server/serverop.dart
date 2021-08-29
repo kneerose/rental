@@ -7,6 +7,7 @@ import 'package:musical_equipment_rental/main.dart';
 import 'package:musical_equipment_rental/model/addlist.dart';
 import 'package:musical_equipment_rental/screen/homescreen/homescreenadmin.dart';
 import 'package:musical_equipment_rental/screen/homescreen/homescreenuser.dart';
+import 'package:musical_equipment_rental/screen/login/login_signupscreen.dart';
 import 'package:musical_equipment_rental/validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Serverop{
@@ -67,6 +68,7 @@ class Serverop{
             sharedPreferences.setString("email", data[4]);
             sharedPreferences.setString("status", data[6]);
             sharedPreferences.setString("firmname",data[1]);
+            return data;
             }
           }
           else if(data1.runtimeType!=String)
@@ -90,6 +92,7 @@ class Serverop{
             sharedPreferences.setString("location", data1[4]);
             sharedPreferences.setString("status", "user");
             }
+            return data1;
           }
         }
       }
@@ -130,13 +133,13 @@ class Serverop{
          {
           
            Fluttertoast.showToast(msg: kAccountCreated,toastLength: Toast.LENGTH_SHORT,gravity: ToastGravity.BOTTOM);
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreenuser()),(r)=>false);
-           SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-            sharedPreferences.setString("email", emAil);
-            sharedPreferences.setString("contactnumber", phoneNumber);
-            sharedPreferences.setString("location", loCation);
-            sharedPreferences.setString("username",userName);
-            sharedPreferences.setString("status", "user");
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LogSign()),(r)=>false);
+          //  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+          //   sharedPreferences.setString("email", emAil);
+          //   sharedPreferences.setString("contactnumber", phoneNumber);
+          //   sharedPreferences.setString("location", loCation);
+          //   sharedPreferences.setString("username",userName);
+          //   sharedPreferences.setString("status", "user");
          }
          else
           {
@@ -191,6 +194,25 @@ class Serverop{
       
     }
     catch(e){
+      print(e);
+    }
+  }
+  Future getproductserver()async
+  {
+      try{
+    final uri = Uri.parse("https://musicalequipmentrental.000webhostapp.com/getproducts.php");
+    var response = await http.get(uri);
+    if(response.statusCode==200)
+   { print(response.body);
+  return jsonDecode(response.body);
+   }
+   else
+   {
+     print(response.statusCode);
+   }
+    }
+    catch(e)
+    {
       print(e);
     }
   }
@@ -322,4 +344,4 @@ class Serverop{
       print(e);
     }
   }
-}
+  }

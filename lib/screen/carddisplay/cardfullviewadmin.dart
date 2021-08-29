@@ -46,7 +46,10 @@ class _CardFullViewAdminState extends State<CardFullViewAdmin> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 height: 300,
-                child: Image.network(urlimagepath +addlist.filepath,fit: BoxFit.fill,)),
+                child:FadeInImage(
+          fadeInDuration: Duration(milliseconds: 100),
+          placeholder: AssetImage("assets/no.png"), image:NetworkImage(urlimagepath+addlist.filepath) ,fit: BoxFit.contain,)
+        ,),
             ),
               heightspace(10),
                Padding(
